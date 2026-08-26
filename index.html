@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2f7d67">
+    <meta name="description" content="Paso Vital - Rutinas de caminata y ejercicio progresivo adaptadas para personas mayores de 50 años.">
+    <title>Paso Vital | Actividad Física Adaptada</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- Encabezado accesible -->
+        <header class="app-header" role="banner">
+            <div class="header-content">
+                <div class="logo-area">
+                    <span class="logo-icon" aria-hidden="true">🚶</span>
+                    <div>
+                        <h1 class="app-title">Paso Vital</h1>
+                        <p class="app-subtitle">Salud y movimiento paso a paso</p>
+                    </div>
+                </div>
+                <button id="btn-toggle-easy-mode" class="btn btn-secondary btn-sm" type="button" aria-pressed="false">
+                    <span aria-hidden="true">👁️</span> Lectura Fácil
+                </button>
+            </div>
+        </header>
+
+        <!-- Contenido principal con enrutamiento de pantallas (SPA) -->
+        <main id="main-content" class="app-main" role="main">
+
+            <!-- 1. VISTA ASISTENTE CONFIGURACIÓN INICIAL (ONBOARDING) -->
+            <section id="view-onboarding" class="view-section hidden" aria-labelledby="onboarding-title">
+                <div class="card onboarding-card">
+                    <div class="onboarding-progress" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4" id="onboarding-progress-bar">
+                        Paso <span id="onboarding-step-num">1</span> de 4
+                    </div>
+
+                    <!-- Paso 1: Edad -->
+                    <div id="onboarding-step-1" class="onboarding-step">
+                        <h2 id="onboarding-title" class="step-title">¿Cuál es tu rango de edad?</h2>
+                        <p class="step-desc">Adaptaremos la intensidad y la duración del plan a tus necesidades.</p>
+                        <div class="option-grid">
+                            <button class="btn btn-option" type="button" data-age="49-54">49 a 54 años</button>
+                            <button class="btn btn-option" type="button" data-age="55-59">55 a 59 años</button>
+                            <button class="btn btn-option" type="button" data-age="60-64">60 a 64 años</button>
+                            <button class="btn btn-option" type="button" data-age="65-69">65 a 69 años</button>
+                            <button class="btn btn-option" type="button" data-age="70+">70 años o más</button>
+                        </div>
+                    </div>
+
+                    <!-- Paso 2: Condición Física -->
+                    <div id="onboarding-step-2" class="onboarding-step hidden">
+                        <h2 class="step-title">¿Cómo te encuentras físicamente?</h2>
+                        <p class="step-desc">Elige la opción que mejor describa tu rutina actual.</p>
+                        <div class="option-stack">
+                            <button class="btn btn-option-lg" type="button" data-level="beginner">
+                                <span class="option-title">🌱 Estoy empezando</span>
+                                <span class="option-sub">Llevo tiempo sin hacer ejercicio regular.</span>
+                            </button>
+                            <button class="btn btn-option-lg" type="button" data-level="intermediate">
+                                <span class="option-title">🚶 Camino habitualmente</span>
+                                <span class="option-sub">Suelo dar paseos de forma continuada.</span>
+                            </button>
+                            <button class="btn btn-option-lg" type="button" data-level="active">
+                                <span class="option-title">⚡ Hago ejercicio regularmente</span>
+                                <span class="option-sub">Mantengo buena movilidad y resistencia.</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Paso 3: Días de entrenamiento -->
+                    <div id="onboarding-step-3" class="onboarding-step hidden">
+                        <h2 class="step-title">¿Cuántos días quieres entrenar a la semana?</h2>
+                        <p class="step-desc">La constancia es la clave para sentirte mejor cada día.</p>
+                        <div class="option-grid" id="onboarding-days-options">
+                            <button class="btn btn-option" type="button" data-days="3">3 días por semana</button>
+                            <button class="btn btn-option" type="button" data-days="4">4 días por semana</button>
+                            <button class="btn btn-option" type="button" data-days="5" id="btn-day-5">5 días por semana</button>
+                        </div>
+                        <p id="onboarding-days-note" class="info-note hidden">💡 Recomendamos 3 o 4 días para comenzar con descansos adecuados.</p>
+                    </div>
+
+                    <!-- Paso 4: Tiempo disponible -->
+                    <div id="onboarding-step-4" class="onboarding-step hidden">
+                        <h2 class="step-title">¿Cuánto tiempo puedes dedicar por sesión?</h2>
+                        <p class="step-desc">Podrás cambiar esto más adelante si lo necesitas.</p>
+                        <div class="option-grid">
+                            <button class="btn btn-option" type="button" data-time="20">20 minutos</button>
+                            <button class="btn btn-option" type="button" data-time="30">30 minutos</button>
+                            <button class="btn btn-option" type="button" data-time="45">45 minutos</button>
+                            <button class="btn btn-option" type="button" data-time="60">60 minutos</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- 2. VISTA PRINCIPAL (HOY) -->
+            <section id="view-home" class="view-section hidden" aria-labelledby="home-greeting">
+                <!-- Saludo -->
+                <div class="welcome-banner">
+                    <h2 id="home-greeting" class="greeting-title">¡Buenos días!</h2>
+                    <p class="greeting-sub">Hoy es un gran día para moverse un poco.</p>
+                </div>
+
+                <!-- Tarjeta de aviso por inactividad o recomendación adaptativa -->
+                <div id="home-adapt-banner" class="banner banner-info hidden" role="region" aria-live="polite">
+                    <span class="banner-icon" aria-hidden="true">💡</span>
+                    <div class="banner-content">
+                        <p id="home-adapt-text">Hemos ajustado tu sesión para que sea suave y cómoda.</p>
+                    </div>
+                </div>
+
+                <!-- Tarjeta Principal de Entrenamiento de hoy -->
+                <article class="card workout-card-main">
+                    <div class="card-badge">Entrenamiento de hoy</div>
+                    <h3 id="today-workout-title" class="workout-title">Paseo de ritmo progresivo</h3>
+                    
+                    <div class="workout-duration-big">
+                        <span class="duration-num" id="today-workout-duration">30</span>
+                        <span class="duration-unit">minutos</span>
+                    </div>
+
+                    <div class="workout-summary-box">
+                        <h4 class="summary-subtitle">Estructura de la sesión:</h4>
+                        <ul class="workout-phases-list" id="today-workout-phases-list">
+                            <!-- Inserción dinámica de fases -->
+                        </ul>
+                    </div>
+
+                    <button id="btn-start-workout" class="btn btn-primary btn-giant" type="button">
+                        <span class="btn-icon" aria-hidden="true">▶</span>
+                        <span>EMPEZAR ENTRENAMIENTO</span>
+                    </button>
+                </article>
+
+                <!-- Acciones alternativas -->
+                <div class="secondary-actions-grid">
+                    <button id="btn-today-cant" class="btn btn-outline" type="button">
+                        <span>😴 Hoy no puedo entrenar</span>
+                    </button>
+                    <button id="btn-free-walk" class="btn btn-outline" type="button">
+                        <span>🚶 Salir a caminar libremente</span>
+                    </button>
+                </div>
+
+                <!-- Recordatorio discreto de hidratación -->
+                <div class="hydration-tip-card">
+                    <span class="tip-icon" aria-hidden="true">💧</span>
+                    <p class="tip-text"><strong>Recordatorio de salud:</strong> Bebe un vaso de agua antes y después de tu paseo.</p>
+                </div>
+
+                <!-- Enlace a aviso de seguridad -->
+                <div class="safety-footer-link">
+                    <button id="btn-open-safety-notice" class="btn-link" type="button">
+                        ℹ️ Recomendaciones de seguridad médica
+                    </button>
+                </div>
+            </section>
+
+
+            <!-- 3. VISTA ENTRENAMIENTO EN TIEMPO REAL -->
+            <section id="view-workout" class="view-section hidden" aria-labelledby="workout-active-title">
+                <div class="card workout-active-card">
+                    <!-- Botón de pánico médico prominente -->
+                    <div class="emergency-bar">
+                        <button id="btn-emergency" class="btn btn-danger-alert" type="button">
+                            ⚠️ NO ME ENCUENTRO BIEN
+                        </button>
+                    </div>
+
+                    <!-- Título de fase actual -->
+                    <div class="phase-header">
+                        <span id="active-phase-badge" class="phase-badge">FASE ACTUAL</span>
+                        <h2 id="active-phase-title" class="active-phase-name">Camina a ritmo cómodo</h2>
+                    </div>
+
+                    <!-- Cronómetro Gigante -->
+                    <div class="clock-container" role="timer" aria-live="off">
+                        <div id="active-timer-display" class="clock-display">05:00</div>
+                        <div class="clock-sublabel">Tiempo restante en esta fase</div>
+                    </div>
+
+                    <!-- Próxima fase -->
+                    <div class="next-phase-box">
+                        <span class="next-label">A continuación:</span>
+                        <span id="active-next-phase-text" class="next-text">Caminar rápido — 2 min</span>
+                    </div>
+
+                    <!-- Controles del entrenamiento -->
+                    <div class="workout-controls-stack">
+                        <div class="control-buttons-row">
+                            <button id="btn-pause-workout" class="btn btn-secondary btn-lg" type="button">
+                                ⏸️ Pausar
+                            </button>
+                            <button id="btn-resume-workout" class="btn btn-success btn-lg hidden" type="button">
+                                ▶️ Continuar
+                            </button>
+                            <button id="btn-stop-workout" class="btn btn-outline-danger btn-lg" type="button">
+                                ⏹️ Finalizar
+                            </button>
+                        </div>
+
+                        <!-- Opciones de Voz y Sonido -->
+                        <div class="workout-audio-toggles">
+                            <button id="btn-toggle-voice" class="btn btn-ghost btn-sm" type="button" aria-pressed="true">
+                                🔊 Voz activa
+                            </button>
+                            <button id="btn-toggle-sound" class="btn btn-ghost btn-sm" type="button" aria-pressed="true">
+                                🔔 Sonidos activos
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- 4. VISTA VALORACIÓN POST-ENTRENAMIENTO -->
+            <section id="view-rating" class="view-section hidden" aria-labelledby="rating-title">
+                <div class="card rating-card">
+                    <h2 id="rating-title" class="rating-main-title">🎉 ¡Entrenamiento completado!</h2>
+                    <p class="rating-sub">Gran trabajo. Nos ayuda mucho saber cómo te has sentido para adaptar tu próxima sesión.</p>
+
+                    <!-- Valoración de Esfuerzo (Borg simplificada) -->
+                    <div class="rating-section">
+                        <h3 class="rating-section-title">¿Cómo notas el esfuerzo?</h3>
+                        <p class="speak-test-info">💡 <em>Prueba del habla:</em> Elige la sensación que describe mejor tu respiración durante el ejercicio.</p>
+                        
+                        <div class="effort-scale-list">
+                            <button class="btn btn-effort" type="button" data-effort="1">
+                                <span class="effort-num">1</span>
+                                <span class="effort-text"><strong>Muy fácil:</strong> Puedo cantar y conversar sin esfuerzo.</span>
+                            </button>
+                            <button class="btn btn-effort" type="button" data-effort="2">
+                                <span class="effort-num">2</span>
+                                <span class="effort-text"><strong>Fácil:</strong> Puedo mantener una conversación continua.</span>
+                            </button>
+                            <button class="btn btn-effort" type="button" data-effort="3">
+                                <span class="effort-num">3</span>
+                                <span class="effort-text"><strong>Cómodo:</strong> Hablo con normalidad pero noto el ritmo.</span>
+                            </button>
+                            <button class="btn btn-effort" type="button" data-effort="4">
+                                <span class="effort-num">4</span>
+                                <span class="effort-text"><strong>Algo intenso:</strong> Puedo hablar, pero me cuesta un poco.</span>
+                            </button>
+                            <button class="btn btn-effort" type="button" data-effort="5">
+                                <span class="effort-num">5</span>
+                                <span class="effort-text"><strong>Muy intenso:</strong> Me cuesta pronunciar frases largas.</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sensación General -->
+                    <div class="rating-section mt-4">
+                        <h3 class="rating-section-title">¿Cómo te has encontrado en general?</h3>
+                        <div class="mood-grid">
+                            <button class="btn btn-mood" type="button" data-mood="muy-bien">
+                                <span class="mood-emoji" aria-hidden="true">😀</span>
+                                <span class="mood-label">Muy bien</span>
+                            </button>
+                            <button class="btn btn-mood" type="button" data-mood="bien">
+                                <span class="mood-emoji" aria-hidden="true">🙂</span>
+                                <span class="mood-label">Bien</span>
+                            </button>
+                            <button class="btn btn-mood" type="button" data-mood="regular">
+                                <span class="mood-emoji" aria-hidden="true">😐</span>
+                                <span class="mood-label">Regular</span>
+                            </button>
+                            <button class="btn btn-mood" type="button" data-mood="dificil">
+                                <span class="mood-emoji" aria-hidden="true">😓</span>
+                                <span class="mood-label">Difícil</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button id="btn-save-rating" class="btn btn-primary btn-giant mt-4" type="button" disabled>
+                        GUARDAR Y VOLVER AL INICIO
+                    </button>
+                </div>
+            </section>
+
+
+            <!-- 5. VISTA PLAN DE 12 SEMANAS -->
+            <section id="view-plan" class="view-section hidden" aria-labelledby="plan-title">
+                <div class="plan-header-card">
+                    <h2 id="plan-title" class="section-page-title">Mi Plan Progresivo de 12 Semanas</h2>
+                    <p class="section-page-sub" id="plan-user-group-desc">Grupo de edad asignado y nivel personalizado.</p>
+                    
+                    <div class="soft-plan-toggle-box">
+                        <label class="toggle-switch-label" for="chk-soft-plan">
+                            <input type="checkbox" id="chk-soft-plan">
+                            <span class="toggle-custom"></span>
+                            <span class="toggle-text"><strong>Activar opción "Plan Suave"</strong> (prioriza caminata sin trote)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Selector o lista de semanas -->
+                <div id="plan-weeks-accordion" class="weeks-accordion-container">
+                    <!-- Inserción dinámica de las 12 semanas -->
+                </div>
+            </section>
+
+
+            <!-- 6. VISTA CALENDARIO SEMANAL -->
+            <section id="view-calendar" class="view-section hidden" aria-labelledby="calendar-title">
+                <div class="card">
+                    <h2 id="calendar-title" class="section-page-title">Calendario Semanal</h2>
+                    <p class="section-page-sub">Planifica tus días de ejercicio y descanso activo.</p>
+
+                    <div class="calendar-days-list" id="calendar-days-container">
+                        <!-- Generación dinámica de Lunes a Domingo -->
+                    </div>
+
+                    <div class="calendar-legend-box mt-4">
+                        <h4 class="legend-title">Leyenda de estados:</h4>
+                        <div class="legend-items">
+                            <span><strong class="status-badge status-done">✓</strong> Completado</span>
+                            <span><strong class="status-badge status-today">●</strong> Hoy</span>
+                            <span><strong class="status-badge status-pending">○</strong> Pendiente</span>
+                            <span><strong class="status-badge status-rest">—</strong> Descanso</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- 7. VISTA PROGRESO Y LOGROS -->
+            <section id="view-progress" class="view-section hidden" aria-labelledby="progress-title">
+                <div class="card mb-3">
+                    <h2 id="progress-title" class="section-page-title">Mi Progreso</h2>
+                    <p class="section-page-sub">Cada paso cuenta para tu salud y bienestar.</p>
+
+                    <!-- Mensaje positivo destacado -->
+                    <div class="motivation-banner">
+                        <span class="banner-emoji" aria-hidden="true">🌟</span>
+                        <p id="progress-motivational-msg">"La constancia vale más que la velocidad. ¡Sigue así!"</p>
+                    </div>
+
+                    <!-- Tarjetas de estadísticas clave -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-icon">🏃</span>
+                            <span class="stat-value" id="stat-workouts-count">0</span>
+                            <span class="stat-label">Sesiones realizadas</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icon">⏱️</span>
+                            <span class="stat-value" id="stat-minutes-walked">0</span>
+                            <span class="stat-label">Minutos caminados</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icon">⚡</span>
+                            <span class="stat-value" id="stat-minutes-jogged">0</span>
+                            <span class="stat-label">Minutos trotados</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-icon">🔥</span>
+                            <span class="stat-value" id="stat-streak-days">0</span>
+                            <span class="stat-label">Racha semanal</span>
+                        </div>
+                    </div>
+
+                    <!-- Progreso de la semana actual -->
+                    <div class="current-week-progress-box mt-4">
+                        <h3 class="progress-box-title">Esta semana</h3>
+                        <div class="progress-bar-container">
+                            <div id="weekly-progress-fill" class="progress-bar-fill" style="width: 0%;"></div>
+                        </div>
+                        <p class="progress-bar-text" id="weekly-progress-text">0 de 4 entrenamientos (0%)</p>
+                    </div>
+                </div>
+
+                <!-- Sección de Logros y Reconocimientos -->
+                <div class="card">
+                    <h3 class="section-subtitle">Mis Logros y Reconocimientos</h3>
+                    <div class="badges-grid" id="badges-container">
+                        <!-- Inserción dinámica de logros -->
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- 8. VISTA AJUSTES Y ACCESIBILIDAD -->
+            <section id="view-settings" class="view-section hidden" aria-labelledby="settings-title">
+                <div class="card">
+                    <h2 id="settings-title" class="section-page-title">Ajustes y Accesibilidad</h2>
+
+                    <form id="form-settings" class="settings-form">
+                        <!-- Perfil personal -->
+                        <fieldset class="settings-fieldset">
+                            <legend class="settings-legend">👤 Mi Perfil de Entrenamiento</legend>
+
+                            <div class="form-group">
+                                <label for="set-age-group">Grupo de edad:</label>
+                                <select id="set-age-group" class="form-control">
+                                    <option value="49-54">49 a 54 años</option>
+                                    <option value="55-59">55 a 59 años</option>
+                                    <option value="60-64">60 a 64 años</option>
+                                    <option value="65-69">65 a 69 años</option>
+                                    <option value="70+">70 años o más</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="set-fitness-level">Nivel físico inicial:</label>
+                                <select id="set-fitness-level" class="form-control">
+                                    <option value="beginner">Principiante (Estoy empezando)</option>
+                                    <option value="intermediate">Intermedio (Camino habitualmente)</option>
+                                    <option value="active">Activo (Ejercicio regular)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="set-days-per-week">Días de entrenamiento por semana:</label>
+                                <select id="set-days-per-week" class="form-control">
+                                    <option value="3">3 días</option>
+                                    <option value="4">4 días</option>
+                                    <option value="5">5 días</option>
+                                </select>
+                            </div>
+                        </fieldset>
+
+                        <!-- Accesibilidad y Sonido -->
+                        <fieldset class="settings-fieldset">
+                            <legend class="settings-legend">♿ Accesibilidad y Ayudas</legend>
+
+                            <div class="toggle-row">
+                                <label for="set-easy-mode">Modo Lectura Fácil (letras y botones gigantes):</label>
+                                <input type="checkbox" id="set-easy-mode" class="toggle-checkbox">
+                            </div>
+
+                            <div class="toggle-row">
+                                <label for="set-high-contrast">Alto Contraste Visual:</label>
+                                <input type="checkbox" id="set-high-contrast" class="toggle-checkbox">
+                            </div>
+
+                            <div class="toggle-row">
+                                <label for="set-voice-enabled">Asistencia por Voz (SpeechSynthesis):</label>
+                                <input type="checkbox" id="set-voice-enabled" class="toggle-checkbox">
+                            </div>
+
+                            <div class="toggle-row">
+                                <label for="set-sound-enabled">Avisos Sonoros (Beep/Tono):</label>
+                                <input type="checkbox" id="set-sound-enabled" class="toggle-checkbox">
+                            </div>
+
+                            <div class="toggle-row">
+                                <label for="set-vibration-enabled">Vibración al cambiar de fase:</label>
+                                <input type="checkbox" id="set-vibration-enabled" class="toggle-checkbox">
+                            </div>
+                        </fieldset>
+
+                        <button id="btn-save-settings" class="btn btn-primary btn-lg w-100 mt-3" type="submit">
+                            💾 GUARDAR CAMBIOS
+                        </button>
+                    </form>
+
+                    <!-- Zona de reinicio seguro -->
+                    <div class="danger-zone-box mt-5">
+                        <h4 class="danger-zone-title">Reiniciar Datos</h4>
+                        <p class="danger-zone-desc">Si lo deseas, puedes borrar tu progreso para volver a empezar desde cero.</p>
+                        <button id="btn-reset-data" class="btn btn-outline-danger" type="button">
+                            🗑️ Reiniciar todo mi progreso
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- 9. VISTA AVISO DE SEGURIDAD / SALUD -->
+            <section id="view-safety" class="view-section hidden" aria-labelledby="safety-page-title">
+                <div class="card">
+                    <h2 id="safety-page-title" class="section-page-title">Antes de Empezar</h2>
+                    
+                    <div class="safety-content-box">
+                        <p class="safety-lead">Esta aplicación ofrece una orientación general de actividad física saludable y no sustituye en ningún caso la valoración de un profesional sanitario.</p>
+
+                        <h3 class="safety-sub">Te recomendamos consultar con tu médico si:</h3>
+                        <ul class="safety-bullet-list">
+                            <li>Llevas mucho tiempo sin realizar ningún tipo de ejercicio físico.</li>
+                            <li>Tienes antecedentes cardiovasculares o hipertensión no controlada.</li>
+                            <li>Sientes molestias o dolor en el pecho al caminar.</li>
+                            <li>Sufres mareos frecuentes o pérdidas de equilibrio.</li>
+                            <li>Tienes problemas articulares o severos de articulaciones/espalda.</li>
+                            <li>Presentas dificultades respiratorias importantes.</li>
+                            <li>Te estás recuperando de una intervención médica o lesión reciente.</li>
+                        </ul>
+
+                        <div class="banner banner-alert mt-4">
+                            <strong>Recuerda:</strong> El objetivo principal es moverte de forma agradable y progresiva. Nunca debes sentir dolor ni fatiga extenuante.
+                        </div>
+                    </div>
+
+                    <button id="btn-back-from-safety" class="btn btn-secondary btn-lg mt-4" type="button">
+                        ← Volver a la pantalla principal
+                    </button>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- BARRA DE NAVEGACIÓN INFERIOR (MÓVIL Y ESCRITORIO) -->
+        <nav class="bottom-nav" role="navigation" aria-label="Navegación principal">
+            <button class="nav-item active" data-view="home" type="button">
+                <span class="nav-icon" aria-hidden="true">🏠</span>
+                <span class="nav-label">Hoy</span>
+            </button>
+            <button class="nav-item" data-view="plan" type="button">
+                <span class="nav-icon" aria-hidden="true">📋</span>
+                <span class="nav-label">Plan</span>
+            </button>
+            <button class="nav-item" data-view="progress" type="button">
+                <span class="nav-icon" aria-hidden="true">📊</span>
+                <span class="nav-label">Progreso</span>
+            </button>
+            <button class="nav-item" data-view="settings" type="button">
+                <span class="nav-icon" aria-hidden="true">⚙️</span>
+                <span class="nav-label">Ajustes</span>
+            </button>
+        </nav>
+
+        <!-- MODAL: URGENCIA MÉDICA / "NO ME ENCUENTRO BIEN" -->
+        <div id="modal-emergency" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-emergency-title">
+            <div class="modal-card modal-card-alert">
+                <h2 id="modal-emergency-title" class="modal-alert-header">🛑 Detén el ejercicio y descansa</h2>
+                <div class="modal-body-text">
+                    <p class="lead-alert">Has pulsado la alerta de descanso.</p>
+                    <p>Si presentas dolor en el pecho, dificultad importante para respirar, mareo intenso u otros síntomas graves, <strong>solicita inmediatamente atención médica o llama al servicio de emergencias.</strong></p>
+                </div>
+                <div class="modal-actions-stack mt-4">
+                    <button id="btn-close-emergency" class="btn btn-primary btn-lg" type="button">
+                        Entendido, estoy descansando
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL: "HOY NO PUEDO ENTRENAR" -->
+        <div id="modal-cant-today" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-cant-title">
+            <div class="modal-card">
+                <h2 id="modal-cant-title" class="modal-title">¿Qué prefieres hacer hoy?</h2>
+                <p class="modal-desc">No pasa nada por cambiar los planes. Lo importante es cuidar de ti.</p>
+                
+                <div class="option-stack mt-3">
+                    <button id="btn-opt-short-version" class="btn btn-option-lg" type="button">
+                        <span class="option-title">⏱️ Versión corta (~15 min)</span>
+                        <span class="option-sub">Hacer una sesión más breve y ligera.</span>
+                    </button>
+                    <button id="btn-opt-gentle-walk" class="btn btn-option-lg" type="button">
+                        <span class="option-title">🍃 Paseo muy suave</span>
+                        <span class="option-sub">Caminar despacio a tu propio ritmo.</span>
+                    </button>
+                    <button id="btn-opt-postpone" class="btn btn-option-lg" type="button">
+                        <span class="option-title">📅 Pasarlo a mañana</span>
+                        <span class="option-sub">Mover la sesión al día siguiente.</span>
+                    </button>
+                    <button id="btn-opt-rest" class="btn btn-option-lg" type="button">
+                        <span class="option-title">🛌 Marcar día de descanso</span>
+                        <span class="option-sub">Tomarte hoy un merecido descanso.</span>
+                    </button>
+                </div>
+
+                <button id="btn-close-cant-modal" class="btn btn-ghost mt-3" type="button">
+                    Cancelar y volver
+                </button>
+            </div>
+        </div>
+
+        <!-- MODAL: CONFIRMACIÓN DE REINICIO -->
+        <div id="modal-confirm-reset" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal-reset-title">
+            <div class="modal-card">
+                <h2 id="modal-reset-title" class="modal-title">¿Borrar todos tus datos?</h2>
+                <p class="modal-desc">Esta acción borrará tus entrenamientos guardados y tu plan actual. Deberás completar el asistente inicial de nuevo.</p>
+                <div class="modal-actions-row mt-4">
+                    <button id="btn-confirm-reset-yes" class="btn btn-danger-alert" type="button">
+                        Sí, borrar datos
+                    </button>
+                    <button id="btn-confirm-reset-no" class="btn btn-secondary" type="button">
+                        No, cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- SCRIPTS MODULARES -->
+    <script src="js/plans.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/accessibility.js"></script>
+    <script src="js/workout.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- REGISTRO PWA SERVICE WORKER -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('Service Worker registrado con éxito:', reg.scope))
+                    .catch(err => console.warn('Error al registrar Service Worker:', err));
+            });
+        }
+    </script>
+</body>
+</html>

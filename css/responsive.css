@@ -1,0 +1,128 @@
+/* ==========================================================================
+   PASO VITAL - CSS RESPONSIVE & ADAPTABILIDAD DE PANTALLAS
+   Garantiza funcionamiento óptimo desde 320px hasta 4K
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   MÓVILES MUY PEQUEÑOS (HASTA 360px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 360px) {
+    :root {
+        --font-size-base: 16px;
+    }
+
+    .app-header {
+        padding: 12px 14px;
+    }
+
+    .app-title {
+        font-size: 1.3rem;
+    }
+
+    .clock-display {
+        font-size: 3.6rem;
+    }
+
+    .duration-num {
+        font-size: 2.8rem;
+    }
+
+    .btn-giant {
+        font-size: 1.15rem;
+        padding: 12px 16px;
+    }
+
+    .stats-grid,
+    .badges-grid,
+    .mood-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   PANTALLAS MEDIANAS / SMARTPHONES GRANDES (DESDE 480px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 480px) {
+    .option-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .secondary-actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* --------------------------------------------------------------------------
+   TABLETS Y PORTÁTILES (DESDE 768px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+    :root {
+        --font-size-base: 19px;
+        --nav-height: 80px;
+    }
+
+    .app-container {
+        max-width: 820px;
+        padding-top: 12px;
+    }
+
+    .card {
+        padding: 32px 28px;
+    }
+
+    .workout-active-card {
+        padding: 36px 30px;
+    }
+
+    .clock-display {
+        font-size: 5.5rem;
+    }
+
+    .active-phase-name {
+        font-size: 2.4rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .badges-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .weeks-accordion-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .bottom-nav {
+        max-width: 820px;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   ESCRITORIO Y MONITORES ANCHOS (DESDE 1024px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1024px) {
+    .app-container {
+        max-width: 960px;
+    }
+
+    .bottom-nav {
+        max-width: 960px;
+    }
+
+    .btn-option-lg {
+        padding: 20px 24px;
+    }
+
+    .mood-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Prevenir desplazamiento horizontal accidental */
+body {
+    overflow-x: hidden;
+}
